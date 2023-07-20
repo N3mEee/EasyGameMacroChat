@@ -76,7 +76,7 @@ const KeyAuthApp = new KeyAuth(
         async function getUsersOnline() {
             let usersOnline = await KeyAuthApp.fetchOnline();
             let onlineUsers = document.createElement("div");
-            onlineUsers.textContent = `Online users: ${usersOnline.length}`;
+            onlineUsers.textContent = `Users online: ${usersOnline.length}`;
             status.appendChild(onlineUsers);
         }
     }
