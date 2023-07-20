@@ -20,7 +20,9 @@ const KeyAuthApp = new KeyAuth(
     status.textContent = "Successfully initialized";
     console.log("Trying to login...");
     status.textContent = "Trying to login...";
-    await KeyAuthApp.login(process.env.USERNAME, process.env.PASSWORD);
+    let username = window.prompt("Please enter your username!");
+    let password = window.prompt("Please enter your password!");
+    await KeyAuthApp.login(username, password);
     console.log("Logged in");
     status.textContent = "Logged in";
     Dashboard();
