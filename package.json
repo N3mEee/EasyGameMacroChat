@@ -1,0 +1,41 @@
+{
+    "name": "keyauth-js-example",
+    "version": "2.5.0",
+    "description": "KeyAuth 1.1 Api JavaScript Example",
+    "main": "index.js",
+    "scripts": {
+        "start": "webpack-dev-server --config webpack.dev.js --open",
+        "build": "webpack --config webpack.prod.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mazkdevf/KeyAuth-JS-Example.git"
+    },
+    "keywords": [
+        "keyauth",
+        "js",
+        "example",
+        "1.1"
+    ],
+    "dependencies": {
+        "axios": "^1.4.0",
+        "moment": "^2.29.4",
+        "os": "^0.1.2"
+    },
+    "author": "mazkdevf <https://github.com/mazkdevf>",
+    "license": "Elastic License 2.0",
+    "bugs": {
+        "url": "https://github.com/mazkdevf/KeyAuth-JS-Example/issues"
+    },
+    "homepage": "https://github.com/mazkdevf/KeyAuth-JS-Example#readme",
+    "devDependencies": {
+        "browser-os": "^1.0.0",
+        "css-loader": "^6.8.1",
+        "dotenv-webpack": "^8.0.1",
+        "html-webpack-plugin": "^5.5.3",
+        "style-loader": "^3.3.3",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^4.15.1"
+    }
+}
