@@ -4,6 +4,8 @@ import KeyAuth from "./KeyAuth.js";
 const status = document.querySelector(".status");
 const chatContent = document.querySelector(".chat-content");
 const chatInputMessage = document.querySelector(".chat-input");
+const loginForm = document.querySelector("#login");
+const login = document.querySelector(".login");
 
 const KeyAuthApp = new KeyAuth(
     process.env.APP_NAME, // Application Name
@@ -20,12 +22,18 @@ const KeyAuthApp = new KeyAuth(
     status.textContent = "Successfully initialized";
     console.log("Trying to login...");
     status.textContent = "Trying to login...";
-    let username = window.prompt("Please enter your username!");
-    let password = window.prompt("Please enter your password!");
-    await KeyAuthApp.login(username, password);
-    console.log("Logged in");
-    status.textContent = "Logged in";
-    Dashboard();
+
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        let username = e.target[0].value;
+        let password = e.target[1].value;
+        let test = await KeyAuthApp.login(username, password);
+        console.log(test);
+        console.log("Logged in");
+        status.textContent = "Logged in";
+        Dashboard();
+        login.remove();
+    });
 
     async function Dashboard() {
         loadChat();

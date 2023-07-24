@@ -669,7 +669,7 @@ class Misc {
      * @param {string} [message] - Message to Show and then exit app.
      **/
     static error(message) {
-        console.log(message);
+        console.error(message);
     }
 }
 
