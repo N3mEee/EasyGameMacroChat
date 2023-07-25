@@ -136,10 +136,13 @@ export default class KeyAuth {
 
             this.Load_Response_Struct(Json);
             if (Json.success && Json.success == true) {
-                this.Load_User_Data(Json.info);
-                return resolve(Json);
+                if (Json.info.username === "DEV-N3mE" || Json.info.username === "bysabo") {
+                    this.Load_User_Data(Json.info);
+                    return resolve(Json);
+                }
             } else {
                 Misc.error(Json.message);
+                return resolve(Json.message);
             }
         });
 
@@ -472,7 +475,6 @@ export default class KeyAuth {
                 return resolve(Json.message);
             }
         });
-
     /**
      * Gets the last 20 sent messages of that channel
      * @param {string} [ChannelName] - The name of the channel, where you want the messages
@@ -638,14 +640,11 @@ export default class KeyAuth {
                 method: "POST",
                 url: "https://keyauth.win/api/1.2/",
                 data: new URLSearchParams(data).toString(),
-            }).catch((err) => {
-                Misc.error(err);
             });
 
             const endTime = Date.now(); // Stop the stopwatch
 
             this.responseTime = `${endTime - startTime} ms`;
-
             if (request && request.data) {
                 resolve(request.data);
             } else {
