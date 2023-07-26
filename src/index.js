@@ -140,8 +140,9 @@ const KeyAuthApp = new KeyAuth(
                         let chatMessage = document.createElement("div");
 
                         let date = new Date(message.timestamp * 1000);
-
-                        chatTime.textContent = `${date.getUTCDate()}/${date.getMonth()} ${date.getHours()}:${date.getMinutes()}`;
+                        chatTime.textContent = `${date.getUTCDate()}/${date.getMonth() + 1} ${date.getHours()}:${pad(
+                            date.getMinutes()
+                        )}`;
                         chatAuthor.textContent = message.author;
                         chatMessage.textContent = message.message;
 
@@ -153,6 +154,9 @@ const KeyAuthApp = new KeyAuth(
                 }
             }
 
+            function pad(d) {
+                return d < 10 ? "0" + d.toString() : d.toString();
+            }
             async function getUsersOnline() {
                 const info = document.querySelector(".info");
                 let usersOnline = await KeyAuthApp.fetchOnline();
