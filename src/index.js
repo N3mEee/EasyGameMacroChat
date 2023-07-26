@@ -1,8 +1,8 @@
 import "./style.css";
 import KeyAuth from "./KeyAuth.js";
 
+const payed = 0;
 const status = document.querySelector(".status");
-const body = document.querySelector("body");
 const chatContent = document.querySelector(".chat-content");
 const chatInputMessage = document.querySelector(".chat-input");
 const loginForm = document.querySelector("#login");
@@ -69,27 +69,45 @@ const KeyAuthApp = new KeyAuth(
 
             let oneDayKeysUsed = document.createElement("div");
             keysInfo.appendChild(oneDayKeysUsed);
-            oneDayKeysUsed.textContent = `Day sold: ${oneDayKeys.length}`;
+            oneDayKeysUsed.textContent = `Day sold (0.5): ${oneDayKeys.length}`;
 
             let oneWeekKeysUsed = document.createElement("div");
             keysInfo.appendChild(oneWeekKeysUsed);
-            oneWeekKeysUsed.textContent = `Week sold: ${oneWeekKeys.length}`;
+            oneWeekKeysUsed.textContent = `Week sold (2.5): ${oneWeekKeys.length}`;
 
             let oneMonthKeysUsed = document.createElement("div");
             keysInfo.appendChild(oneMonthKeysUsed);
-            oneMonthKeysUsed.textContent = `Month sold: ${oneMonthKeys.length}`;
+            oneMonthKeysUsed.textContent = `Month sold (5.5): ${oneMonthKeys.length}`;
 
             let lifetimeKeysUsed = document.createElement("div");
             keysInfo.appendChild(lifetimeKeysUsed);
-            lifetimeKeysUsed.textContent = `LifeTime sold: ${lifetimeKeys.length}`;
+            lifetimeKeysUsed.textContent = `LifeTime sold (20): ${lifetimeKeys.length}`;
 
-            let dash = document.createElement("div");
-            keysInfo.appendChild(dash);
-            dash.textContent = `---------------------`;
+            createDash(keysInfo);
 
             let totalKeysUsed = document.createElement("div");
             keysInfo.appendChild(totalKeysUsed);
-            totalKeysUsed.textContent = `Total sold: ${keysUsed.length}`;
+            totalKeysUsed.textContent = `Total keys sold: ${keysUsed.length}`;
+
+            createDash(keysInfo);
+
+            let payedKeys = document.createElement("div");
+            keysInfo.appendChild(payedKeys);
+            payedKeys.textContent = `Payed: -${payed}`;
+
+            createDash(keysInfo);
+
+            let totalSold = document.createElement("div");
+            keysInfo.appendChild(totalSold);
+            let ammount =
+                oneDayKeys.length * 0.5 +
+                oneWeekKeys.length * 2.5 +
+                oneMonthKeys.length * 5.5 +
+                lifetimeKeys.length * 20 -
+                payed;
+            totalSold.textContent = `To Pay: ${ammount}`;
+            totalSold.style.color = "green";
+
             getUsersOnline();
 
             const chatInput = document.createElement("input");
@@ -109,9 +127,7 @@ const KeyAuthApp = new KeyAuth(
             });
 
             async function loadChat() {
-                // console.log("Loading chat...");
-                // status.textContent = "Loading chat...";
-
+                console.log("Loading chat...");
                 let chat = await KeyAuthApp.ChatGet(process.env.CHAT_NAME);
                 if (chat.length > 0) {
                     while (chatContent.firstChild) {
@@ -133,8 +149,7 @@ const KeyAuthApp = new KeyAuth(
                         chatContent.appendChild(chatAuthor);
                         chatContent.appendChild(chatMessage);
                     });
-                    // status.textContent = "Chat loaded successfully";
-                    // console.log("Chat loaded successfully");
+                    console.log("Chat loaded successfully");
                 }
             }
 
@@ -144,6 +159,12 @@ const KeyAuthApp = new KeyAuth(
                 let onlineUsers = document.createElement("div");
                 onlineUsers.textContent = `Users online: ${usersOnline.length}`;
                 info.appendChild(onlineUsers);
+            }
+
+            function createDash(parrent) {
+                let dash = document.createElement("div");
+                parrent.appendChild(dash);
+                dash.textContent = `---------------------`;
             }
         }
     }

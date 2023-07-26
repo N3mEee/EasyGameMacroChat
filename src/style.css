@@ -9,12 +9,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
+    gap: 20px;
 }
+
 .chat-content {
     display: grid;
     grid-template-columns: max-content max-content 1fr;
-    gap: 20px;
+    gap: 10px;
 }
 
 input {
