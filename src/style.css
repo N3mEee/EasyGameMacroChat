@@ -37,7 +37,16 @@ form {
     align-items: center;
 }
 
-input[type="text"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+}
+
 input[type="password"] {
     width: 100%;
     padding: 10px;
