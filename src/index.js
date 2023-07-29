@@ -93,7 +93,7 @@ const KeyAuthApp = new KeyAuth(
 
             let payedKeys = document.createElement("div");
             keysInfo.appendChild(payedKeys);
-            payedKeys.textContent = `Payed: -${payed}`;
+            payedKeys.textContent = `Payed: - ${payed}`;
 
             createDash(keysInfo);
 
@@ -106,6 +106,7 @@ const KeyAuthApp = new KeyAuth(
                 lifetimeKeys.length * 20 -
                 payed;
             totalSold.textContent = `To Pay: ${ammount}`;
+            totalSold.classList.add("topay");
             totalSold.style.color = "green";
 
             getUsersOnline();
@@ -151,6 +152,7 @@ const KeyAuthApp = new KeyAuth(
                         chatContent.appendChild(chatMessage);
                     });
                     console.log("Chat loaded successfully");
+                    chatContent.scroll(0, chatContent.scrollHeight);
                 }
             }
 
