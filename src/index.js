@@ -2,50 +2,49 @@ import "./style.css";
 import KeyAuth from "./KeyAuth.js";
 
 const payed = 0;
-const status = document.querySelector(".status");
-const chatContent = document.querySelector(".chat-content");
-const chatInputMessage = document.querySelector(".chat-input");
+const statusElement = document.querySelector(".status");
+const chatContentElement = document.querySelector(".chat-content");
+const chatInputMessageElement = document.querySelector(".chat-input");
 const loginForm = document.querySelector("#login");
-const login = document.querySelector(".login");
-login.style.display = "none";
+const loginContainer = document.querySelector(".login");
+loginContainer.style.display = "none";
+
 const KeyAuthApp = new KeyAuth(
-    process.env.APP_NAME, // Application Name
-    process.env.OWNER_ID, // OwnerID
-    process.env.APP_SECRET_KEY, // Application Secret
-    process.env.VERSION // Application Version
+    process.env.APP_NAME,
+    process.env.OWNER_ID,
+    process.env.APP_SECRET_KEY,
+    process.env.VERSION
 );
 
-(async () => {
+const initializeApp = async () => {
     console.log("Initializing...");
-    status.textContent = "Initializing...";
-    let initializeData = await KeyAuthApp.Initialize();
+    statusElement.textContent = "Initializing...";
+    const initializeData = await KeyAuthApp.Initialize();
     if (initializeData) {
-        login.style.display = "";
+        loginContainer.style.display = "";
         console.log("Successfully initialized");
-        status.textContent = "Successfully initialized";
+        statusElement.textContent = "Successfully initialized";
 
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             console.log("Trying to login...");
-            status.textContent = "Trying to login...";
-            let username = e.target[0].value;
-            let password = e.target[1].value;
-            let loginData = await KeyAuthApp.login(username, password);
+            statusElement.textContent = "Trying to login...";
+            const username = e.target.username.value;
+            const password = e.target.password.value;
+            const loginData = await KeyAuthApp.login(username, password);
             if (loginData.success) {
                 console.log(`Logged in as: ${loginData.info.username}`);
-                status.textContent = `Logged in as: ${loginData.info.username}`;
+                statusElement.textContent = `Logged in as: ${loginData.info.username}`;
                 Dashboard();
-                login.remove(); //remove login form
+                loginContainer.remove(); // Remove login form
             } else {
-                status.textContent = loginData;
+                statusElement.textContent = loginData;
             }
         });
 
         async function Dashboard() {
             loadChat();
-            setInterval(async () => {
-                await loadChat();
-            }, 10000);
+            setInterval(loadChat, 10000);
 
             const options = { method: "GET", headers: { accept: "application/json" } };
             let data = await fetch(
@@ -53,62 +52,47 @@ const KeyAuthApp = new KeyAuth(
                 options
             )
                 .then((response) => response.json())
-                .then((response) => response)
                 .catch((err) => console.error(err));
 
-            let keysBySabo = data.keys.filter((key) => key.genby === "bysabo");
-            let keysUsed = keysBySabo.filter((key) => key.status === "Used");
-            let oneDayKeys = keysUsed.filter((key) => key.expires === "86400");
-            let oneWeekKeys = keysUsed.filter((key) => key.expires === "604800");
-            let oneMonthKeys = keysUsed.filter((key) => key.expires === "2592000");
-            let lifetimeKeys = keysUsed.filter((key) => key.expires === "863910000");
+            const keysBySabo = data.keys.filter((key) => key.genby === "bysabo");
+            const keysUsed = keysBySabo.filter((key) => key.status === "Used");
+            const oneDayKeys = keysUsed.filter((key) => key.expires === "86400");
+            const oneWeekKeys = keysUsed.filter((key) => key.expires === "604800");
+            const oneMonthKeys = keysUsed.filter((key) => key.expires === "2592000");
+            const lifetimeKeys = keysUsed.filter((key) => key.expires === "863910000");
 
             const info = document.querySelector(".info");
-            let keysInfo = document.createElement("div");
+            const keysInfo = document.createElement("div");
             info.appendChild(keysInfo);
 
-            let oneDayKeysUsed = document.createElement("div");
-            keysInfo.appendChild(oneDayKeysUsed);
-            oneDayKeysUsed.textContent = `Day sold (0.5): ${oneDayKeys.length}`;
+            function createInfoDiv(text, className) {
+                const infoDiv = document.createElement("div");
+                keysInfo.appendChild(infoDiv);
+                infoDiv.textContent = text;
+                className ? infoDiv.classList.add(className) : console.log("no class");
+            }
 
-            let oneWeekKeysUsed = document.createElement("div");
-            keysInfo.appendChild(oneWeekKeysUsed);
-            oneWeekKeysUsed.textContent = `Week sold (2.5): ${oneWeekKeys.length}`;
+            createInfoDiv(``, `dash`);
+            createInfoDiv(`Day sold (0.5): ${oneDayKeys.length}`);
+            createInfoDiv(`Week sold (2.5): ${oneWeekKeys.length}`);
+            createInfoDiv(`Month sold (5.5): ${oneMonthKeys.length}`);
+            createInfoDiv(`LifeTime sold (20): ${lifetimeKeys.length}`);
+            createInfoDiv(`Total keys sold: ${keysUsed.length}`);
+            createInfoDiv(``, `dash`);
 
-            let oneMonthKeysUsed = document.createElement("div");
-            keysInfo.appendChild(oneMonthKeysUsed);
-            oneMonthKeysUsed.textContent = `Month sold (5.5): ${oneMonthKeys.length}`;
+            createInfoDiv(`Payed: - ${payed}`);
 
-            let lifetimeKeysUsed = document.createElement("div");
-            keysInfo.appendChild(lifetimeKeysUsed);
-            lifetimeKeysUsed.textContent = `LifeTime sold (20): ${lifetimeKeys.length}`;
-
-            createDash(keysInfo);
-
-            let totalKeysUsed = document.createElement("div");
-            keysInfo.appendChild(totalKeysUsed);
-            totalKeysUsed.textContent = `Total keys sold: ${keysUsed.length}`;
-
-            createDash(keysInfo);
-
-            let payedKeys = document.createElement("div");
-            keysInfo.appendChild(payedKeys);
-            payedKeys.textContent = `Payed: - ${payed}`;
-
-            createDash(keysInfo);
-
-            let totalSold = document.createElement("div");
+            const totalSold = document.createElement("div");
             keysInfo.appendChild(totalSold);
-            let ammount =
+            const amount =
                 oneDayKeys.length * 0.5 +
                 oneWeekKeys.length * 2.5 +
                 oneMonthKeys.length * 5.5 +
                 lifetimeKeys.length * 20 -
                 payed;
-            totalSold.textContent = `To Pay: ${ammount}`;
+            totalSold.textContent = `To Pay: ${amount}`;
             totalSold.classList.add("topay");
-            totalSold.style.color = "green";
-
+            createInfoDiv(``, `dash`);
             getUsersOnline();
 
             const chatInput = document.createElement("input");
@@ -118,8 +102,8 @@ const KeyAuthApp = new KeyAuth(
 
             const sendMessage = document.createElement("button");
             sendMessage.textContent = "Send Message";
-            chatInputMessage.appendChild(chatInput);
-            chatInputMessage.appendChild(sendMessage);
+            chatInputMessageElement.appendChild(chatInput);
+            chatInputMessageElement.appendChild(sendMessage);
 
             sendMessage.addEventListener("click", async (e) => {
                 e.preventDefault();
@@ -131,34 +115,40 @@ const KeyAuthApp = new KeyAuth(
                 console.log("Loading chat...");
                 let chat = await KeyAuthApp.ChatGet(process.env.CHAT_NAME);
                 if (chat.length > 0) {
-                    while (chatContent.firstChild) {
-                        chatContent.removeChild(chatContent.firstChild);
-                    }
-
+                    chatContentElement.innerHTML = ""; // Clear existing chat messages
                     chat.forEach((message) => {
-                        let chatTime = document.createElement("div");
-                        let chatAuthor = document.createElement("div");
-                        let chatMessage = document.createElement("div");
+                        const chatMessageWrapper = document.createElement("div");
+                        chatMessageWrapper.classList.add("chat-message");
 
-                        let date = new Date(message.timestamp * 1000);
+                        const chatTime = document.createElement("div");
+                        chatTime.classList.add("chat-time");
+                        const chatAuthor = document.createElement("div");
+                        chatAuthor.classList.add("chat-author");
+                        const chatMessage = document.createElement("div");
+                        chatMessage.classList.add("chat-text");
+
+                        const date = new Date(message.timestamp * 1000);
                         chatTime.textContent = `${date.getUTCDate()}/${date.getMonth() + 1} ${date.getHours()}:${pad(
                             date.getMinutes()
                         )}`;
                         chatAuthor.textContent = message.author;
                         chatMessage.textContent = message.message;
 
-                        chatContent.appendChild(chatTime);
-                        chatContent.appendChild(chatAuthor);
-                        chatContent.appendChild(chatMessage);
+                        chatMessageWrapper.appendChild(chatTime);
+                        chatMessageWrapper.appendChild(chatAuthor);
+                        chatMessageWrapper.appendChild(chatMessage);
+
+                        chatContentElement.appendChild(chatMessageWrapper);
                     });
                     console.log("Chat loaded successfully");
-                    chatContent.scroll(0, chatContent.scrollHeight);
+                    chatContentElement.scroll(0, chatContentElement.scrollHeight);
                 }
             }
 
             function pad(d) {
                 return d < 10 ? "0" + d.toString() : d.toString();
             }
+
             async function getUsersOnline() {
                 const info = document.querySelector(".info");
                 let usersOnline = await KeyAuthApp.fetchOnline();
@@ -166,12 +156,8 @@ const KeyAuthApp = new KeyAuth(
                 onlineUsers.textContent = `Users online: ${usersOnline.length}`;
                 info.appendChild(onlineUsers);
             }
-
-            function createDash(parrent) {
-                let dash = document.createElement("div");
-                parrent.appendChild(dash);
-                dash.textContent = `---------------------`;
-            }
         }
     }
-})();
+};
+
+initializeApp();
