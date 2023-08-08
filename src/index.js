@@ -27,6 +27,7 @@ const initializeApp = async () => {
 
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            e.target[2].disabled = true;
             console.log("Trying to login...");
             statusElement.textContent = "Trying to login...";
             const username = e.target.username.value;
@@ -40,6 +41,7 @@ const initializeApp = async () => {
             } else {
                 statusElement.textContent = loginData;
             }
+            e.target[2].disabled = false;
         });
 
         async function Dashboard() {
@@ -69,7 +71,7 @@ const initializeApp = async () => {
                 const infoDiv = document.createElement("div");
                 keysInfo.appendChild(infoDiv);
                 infoDiv.textContent = text;
-                className ? infoDiv.classList.add(className) : console.log("no class");
+                className ? infoDiv.classList.add(className) : "";
             }
 
             createInfoDiv(``, `dash`);
