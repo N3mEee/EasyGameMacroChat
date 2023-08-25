@@ -1,7 +1,7 @@
 import "./style.css";
 import KeyAuth from "./KeyAuth.js";
 
-const payed = 62;
+const payed = 67;
 const statusElement = document.querySelector(".status");
 const chatContentElement = document.querySelector(".chat-content");
 const chatInputMessageElement = document.querySelector(".chat-input");
